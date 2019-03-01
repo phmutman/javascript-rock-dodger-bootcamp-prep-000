@@ -29,12 +29,12 @@ function checkCollision(rock) {
     const dodgerLeftEdge = positionToInteger(DODGER.style.left)
 
     // FIXME: The DODGER is 40 pixels wide -- how do we get the right edge?
-    const dodgerRightEdge = 0;
+    const dodgerRightEdge = dodgerLeftEdge + 40;
 
     const rockLeftEdge = positionToInteger(rock.style.left)
 
     // FIXME: The rock is 20 pixel's wide -- how do we get the right edge?
-    const rockRightEdge = 0;
+    const rockRightEdge = rockLeftEdge + 20;
 
     if (false /**
                * Think about it -- what's happening here?
@@ -79,6 +79,16 @@ function createRock(x) {
      * If a rock collides with the DODGER,
      * we should call endGame()
      */
+     if((rockLeftEdge < dodgerLeftEdge) && (rockRightEdge > dodgerLeftEdge)){
+       endGame()
+     } else if ((rockLeftEdge > dodgerLeftEdge)&&(rockRightEdge < dodgerRightEdge)){
+       endGame()
+     } else if ((rockLeftEdge < dodgerRightEdge)&&(rockRightEdge > dodgerRightEdge)){
+       endGame()
+     } else if (rock.style.bottom === '0px'){
+       endGame()
+     } else (window.requestAnimationFrame(moveDodger))
+
 
     /**
      * Otherwise, if the rock hasn't reached the bottom of
@@ -92,6 +102,7 @@ function createRock(x) {
   }
 
   // We should kick of the animation of the rock around here
+  start()
 
   // Add the rock to ROCKS so that we can remove all rocks
   // when there's a collision
@@ -108,9 +119,20 @@ function createRock(x) {
  * Finally, alert "YOU LOSE!" to the player.
  */
 function endGame() {
+  gameInterval = null;
+  ROCKS.splice(0,(ROCKS.length - 1))
+  moveDodger([])
+  alert('YOU LOOSE')
 }
 
 function moveDodger(e) {
+  if(e.which === LEFT_ARROW){
+    moveDodgerLeft()
+    
+  }
+  else if (e.which === RIGHT_ARROW){
+    moveDodgerRight()
+  }
   // implement me!
   /**
    * This function should call `moveDodgerLeft()`
@@ -122,6 +144,19 @@ function moveDodger(e) {
 }
 
 function moveDodgerLeft() {
+
+  var leftNumbers = dodger.style.left.replace('px', '')
+  var left = parseInt(leftNumbers, 10)
+  function sete (){
+    DODGER.style.left = `${left - 1}px`
+    
+    if (left > 0) {
+      window.requestAnimationFrame(sete)
+    }
+  }
+  
+  window.requestAnimationFrame(sete)
+
   // implement me!
   /**
    * This function should move DODGER to the left
@@ -130,6 +165,19 @@ function moveDodgerLeft() {
 }
 
 function moveDodgerRight() {
+  
+  var rightNumbers = dodger.style.right.replace('px', '')
+  var right = parseInt(rightNumbers, 10)
+  function seter (){
+    DODGER.style.right = `${right + 4}px`
+    
+    if (right < GAME_WIDTH) {
+      window.requestAnimationFrame(seter)
+    }
+  }
+  
+  window.requestAnimationFrame(seter)
+  
   // implement me!
   /**
    * This function should move DODGER to the right
